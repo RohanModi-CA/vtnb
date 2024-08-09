@@ -49,8 +49,11 @@ function M.mkeqn(number)
 	line = regexMakeEqn(line) .. comments 
 
 	-- * `false`: This argument controls strict indexing; `false` means out-of-bounds indices are clamped.
-	vim.api.nvim_buf_set_lines(0, number-1, number, false, line) 
+	line_table = {}
+	table.insert(line_table, line)
+	vim.api.nvim_buf_set_lines(0, number-1, number, false, line_table) 
 
+$$ brother buggs $$
 
 end
 
