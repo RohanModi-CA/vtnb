@@ -56,7 +56,7 @@ local function getNumeratorAndEnd(rest)
 	  rest = numerator .. "  " .. string.sub(rest, end2 + 1)
 	end
 
-	rest = " { " .. rest .. " } "
+	rest = " {" .. rest .. "} "
 
 	return rest
 end
