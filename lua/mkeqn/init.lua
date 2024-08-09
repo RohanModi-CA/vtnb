@@ -96,6 +96,5 @@ function M.killeqn(number)
 end
 
 
-\begin{equation}   bug   \end{equation}
 
 return M
