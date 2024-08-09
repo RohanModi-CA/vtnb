@@ -70,7 +70,9 @@ function M.killFrac(input, line_number)
 	reversedIndex = string.find((string.reverse(string.sub(input, 1, indexOfKILLFRAC - 1))), "carf\\" )
 	
 	if reversedIndex == -1 or reversedIndex == nil then
-		error("Couldn't find a \frac tag")
+		print("Couldn't find a \\frac tag")
+		return nil
+
 	end
 
 	indexOfFrac = string.len(string.sub(input, 1, indexOfKILLFRAC - 1)) + 2 - reversedIndex -5
@@ -82,7 +84,6 @@ function M.killFrac(input, line_number)
 	table.insert(line_table, line)
 
 	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, false, line_table)
-
 
 end
 
