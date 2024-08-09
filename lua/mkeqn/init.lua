@@ -31,7 +31,7 @@ local function regexMakeEqn(input)
         local modifiedString = trimmedInput:gsub("^%$%$%s*", "\\begin{equation}   "):gsub("%s*%$%$", "   \\end{equation}")
         return(modifiedString)
     else
-		error("no math mode delimiters ($$) or (\\[ \\]) found")
+		error("no math mode delimiters ($$) or (\\[ \\]) found",3)
     end
 end
 
