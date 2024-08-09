@@ -56,6 +56,8 @@ local function getNumeratorAndEnd(rest)
 	  rest = numerator .. "  " .. string.sub(rest, end2 + 1)
 	end
 
+	rest = " { " .. rest .. " } "
+
 	return rest
 end
 
@@ -86,6 +88,7 @@ function M.killFrac(input, line_number)
 	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, false, line_table)
 
 end
+
 
 
 return M
