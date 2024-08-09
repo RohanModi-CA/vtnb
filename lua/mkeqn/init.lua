@@ -48,7 +48,8 @@ function M.mkeqn(number)
 		line = string.sub(line, 1, hasComment -1)
 	end
 
-	line = regexMakeEqn(line) + comments 
+	print(line .. number)
+	-- line = regexMakeEqn(line) + comments 
 
 	-- * `false`: This argument controls strict indexing; `false` means out-of-bounds indices are clamped.
 	vim.api.nvim_buf_set_lines(0, number-1, number, false, line) 
