@@ -39,7 +39,7 @@ local function regexKillEqn(input)
     local trimmedInput = input:match("^%s*(.-)%s*$")
     -- Check if the string starts with "\[" and ends with "\]"
     if trimmedInput:match("^\\begin{%s*equation%s*}(.-)%s*\\end{%s*equation%s*}$") then
-        local modifiedString = trimmedInput:gsub("^\\%[%s*", "\\[     "):gsub("%s*\\%]$", "     \\]")
+        local modifiedString = trimmedInput:gsub("^\\begin{%s*equation%s*}", "\\[     "):gsub("\\end{%s*equation%s*}$", "     \\]")
         return(modifiedString)
    else
 		error("no equations found! (must be enclosed within a \\begin{equation} and \\end{equation})")
@@ -96,6 +96,6 @@ function M.killeqn(number)
 end
 
 
-
+\begin{equation}   bug   \end{equation}
 
 return M
