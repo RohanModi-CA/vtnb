@@ -66,12 +66,14 @@ function M.killFrac(input, line_number)
 	-- no not found error handling necessary since this being run means there is definitely a KILLFRAC
 
 	indexOfKILLFRAC = string.find(input,"KILLFRAC")
-	indexOfFrac = string.len(string.sub(input, 1, indexOfKILLFRAC - 1)) + 2 - string.find((string.reverse(string.sub(input, 1, indexOfKILLFRAC - 1))), "carf\\" ) -5
 
-	if indexOfFrac == -1 then
+	reversedIndex = string.find((string.reverse(string.sub(input, 1, indexOfKILLFRAC - 1))), "carf\\" )
+	
+	if reversedIndex == -1 or reversedIndex == nil then
 		error("Couldn't find a \frac tag")
 	end
 
+	indexOfFrac = string.len(string.sub(input, 1, indexOfKILLFRAC - 1)) + 2 - reversedIndex -5
 	everythingBefore = string.sub(input, 0, indexOfFrac -1)
 	everythingAfter = getNumeratorAndEnd(string.sub(input, indexOfFrac + 5))
 	line = everythingBefore .. "  " .. everythingAfter
