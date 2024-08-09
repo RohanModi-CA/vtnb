@@ -37,6 +37,7 @@ end
 
 function M.mkeqn(number)
 	
+	number = tonumber(number)
 	-- local line = vim.fn.getline(".")
 	local line = vim.api.nvim_buf_get_lines(0, number -1, number, false)[1]
 	local comments = ""
