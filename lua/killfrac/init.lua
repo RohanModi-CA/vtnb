@@ -76,11 +76,11 @@ function M.killFrac(input, line_number)
 	everythingAfter = getNumeratorAndEnd(string.sub(input, indexOfFrac + 5))
 	line = everythingBefore .. "  " .. everythingAfter
 
-	line_table = []
+	line_table = {}
 	table.insert(line_table, line)
 
 	vim.api.nvim_buf_set_lines(0, line_number - 1, line_number, false, line_table)
-	
+
 
 end
 
