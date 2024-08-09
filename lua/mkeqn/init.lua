@@ -25,13 +25,13 @@ local function regexMakeEqn(input)
     if trimmedInput:match("^\\%[%s*(.-)%s*\\%]$") then
         -- Replace start with "EE" and end with "FF"
         local modifiedString = trimmedInput:gsub("^\\%[%s*", "\\begin{equation}   "):gsub("%s*\\%]$", "   \\end{equation}")
-        print(modifiedString)
+        return(modifiedString)
     elseif trimmedInput:match("^%$%$%s*(.-)%s*%$%$") then
         -- Replace start with "EE" and end with "FF"
         local modifiedString = trimmedInput:gsub("^%$%$%s*", "\\begin{equation}   "):gsub("%s*%$%$", "   \\end{equation}")
-        print(modifiedString)
+        return(modifiedString)
     else
-        print("not found")
+		error("no math mode delimiters ($$) or (\\[ \\]) found")
     end
 end
 
