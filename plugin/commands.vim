@@ -1,1 +1,1 @@
-command! -nargs=1 MKEQN lua require('mkeqn').mkeqn(tonumber(<f-args>))
+command! -nargs=1 MKEQN lua require('mkeqn').mkeqn((<f-args>))
