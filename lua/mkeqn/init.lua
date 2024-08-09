@@ -96,5 +96,4 @@ function M.killeqn(number)
 end
 
 
-
 return M
