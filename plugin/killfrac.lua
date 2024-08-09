@@ -10,7 +10,7 @@ vim.api.nvim_create_autocmd("CursorMovedI", {
     if last_word == "KILLFRAC" and not killfrac_typed then
       killfrac_typed = true
       print("True")
-	  require('killFrac').killFrac(current_line, line_number)
+	  require('killfrac').killFrac(current_line, line_number)
     else
       killfrac_typed = false
 	  print("false")
