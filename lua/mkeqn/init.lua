@@ -38,7 +38,7 @@ end
 function M.mkeqn(number)
 	
 	-- local line = vim.fn.getline(".")
-	local line = vim.fn.get_lines(0, number -1, number, false)[1]
+	local line = vim.api.nvim__buf_get_lines(0, number -1, number, false)[1]
 	local comments = ""
 
 	local hasComment = string.find(line,"%%")
