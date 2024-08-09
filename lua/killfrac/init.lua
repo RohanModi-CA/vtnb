@@ -51,12 +51,11 @@ local function getNumeratorAndEnd(rest)
 	numerator = (string.sub(rest, start1 + 1, end1 - 1))
 
 	if end2 == -1 then
-	  rest = numerator .. "  " .. string.sub(rest, end1 + 1)
+	  rest = " {".. numerator .. "}  " .. string.sub(rest, end1 + 1)
 	elseif end2 ~= -1 then
-	  rest = numerator .. "  " .. string.sub(rest, end2 + 1)
+	  rest = " {"..numerator .. "}  " .. string.sub(rest, end2 + 1)
 	end
 
-	rest = " {" .. rest .. "} "
 
 	return rest
 end
