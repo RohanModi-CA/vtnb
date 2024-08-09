@@ -1,4 +1,5 @@
 -- local RunOnAllFileTypes = not (vim.g.VTSRunOnAllFileTypes==nil)
+local M = {}
 
 --[[
 if RunOnAllFileTypes then
@@ -34,10 +35,8 @@ local function regexMakeEqn(input)
     end
 end
 
-function mkeqn(number)
+function M.mkeqn(number)
 	
-	print(number)
-	--[
 	-- local line = vim.fn.getline(".")
 	local line = vm.fn.get_lines(0, number -1, number, false)[1]
 	local comments = ""
@@ -52,6 +51,7 @@ function mkeqn(number)
 
 	-- * `false`: This argument controls strict indexing; `false` means out-of-bounds indices are clamped.
 	vim.api.nvim_buf_set_lines(0, number-1, number, false, line) 
-	--]
 
 end
+
+return M
