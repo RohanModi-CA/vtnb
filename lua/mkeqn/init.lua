@@ -53,7 +53,6 @@ function M.mkeqn(number)
 	table.insert(line_table, line)
 	vim.api.nvim_buf_set_lines(0, number-1, number, false, line_table) 
 
-$$ brother buggs $$
 
 end
 
