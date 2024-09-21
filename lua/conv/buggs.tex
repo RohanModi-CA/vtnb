@@ -1,10 +1,8 @@
-%!TEX TS-program = xelatex
 \documentclass[12pt]{article}\input{/home/thinkpad/Documents/FileFolder/setup/preamble.tex}
-\newgeometry{vmargin={15mm}, hmargin={25.4mm,25.4mm}}   % set the margins
-\usepackage{xcolor}
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%% START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 import numpy as np # import built-in librairies (super useful)
@@ -12,6 +10,8 @@ import numpy as np # import built-in librairies (super useful)
 import matplotlib.pyplot as plt
 
 # make graphics show up in Jupyter notebook
+
+%matplotlib inline 
 
 import os
 
@@ -88,34 +88,31 @@ def data_generator(mean, std, n_measurements = 500, n_samples = 20): # function 
     return np.random.normal(loc = mean, scale = std, size = (n_measurements, n_samples))
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
-
+\medskip
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
-data = np.genfromtxt("/home/thinkpad/Téléchargements/buggsa.csv", delimiter=",", invalid_raise=False)
+print(data)
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 Yes, it does make sense to transpose this.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 data = np.transpose(data)
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 So now we handle the nan and put each row into its own python list, run it through numpy again, and put the means into another list.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 data_l = []
@@ -157,26 +154,23 @@ for i in data_l:
 print(means, "\n", stds)
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-\lstinputlisting[frame=tlbr, backgroundcolor=\color{#CDCDCD}]{.vtnb_out_4.txt}
-%%% vtnb end output %%%
-
+\medskip
 
 These values do agree with manual calculations! We will choose the 2nd distance, 40cm to generate our data.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 sim_data = data_generator(means[1], stds[1])
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 We will now plot this as a histogram:
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 flattened = (sim_data.flatten())
@@ -184,35 +178,31 @@ flattened = (sim_data.flatten())
 plt.hist(flattened, bins=10);
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 That doesn't look very Gaussian! Let's change the amount of bins, and see something much more pleasant:
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 counts, bins, _ = plt.hist(flattened, bins=100); # save the outputs, into variables, of pyplot.hist, ignoring the "patches" return object.
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 There we go! Let's investigate the mean and standard deviation of that.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 print(f"The mean is {np.mean(flattened)}, and the standard deviation is: {np.std(flattened, ddof=1)}.")
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-	\lstinputlisting[frame=tlbr]{.vtnb_out_8.txt}
-%%% vtnb end output %%%
-
-
+\medskip
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 # Save the counts (heights of the bars) to a file
@@ -226,13 +216,12 @@ np.savetxt("histogram_counts.txt", counts)
 np.savetxt("histogram_bins.txt", bins)
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 We will now be plotting a histogram of all of the means from each trial. So we will first make a list of means.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 sd_means = []
@@ -252,13 +241,12 @@ np.savetxt("sdm_count.txt", bins)
 np.savetxt("sdm_bins.txt", bins)
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 The means and standard deviations are as follows:
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 mean_means = np.mean(sd_means)
@@ -268,14 +256,12 @@ mean_stds = np.std(sd_means, ddof=1)
 print(f"The mean of the means is: {mean_means}, and the standard deviation is: {mean_stds}")
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-	\lstinputlisting[frame=tlbr]{.vtnb_out_11.txt}
-%%% vtnb end output %%%
-
+\medskip
 
 Okay, quick detour, let's find the area under our histogram so that we can normalize our Gaussian.
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 def area_of_bins(counts, bins):
@@ -297,13 +283,12 @@ def area_of_bins(counts, bins):
 #area_of_bins(sdm_count, sdm_bins);
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
+\medskip
 
 Great! With that out of the way, let me start getting my values for my Gaussian. Let's make a function:
 
-
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 def gaussian(x, mu, sigma):
@@ -311,10 +296,9 @@ def gaussian(x, mu, sigma):
     return (1)/(sigma * np.sqrt(2*np.pi)) * np.exp(    -1 * ( ((x-mu)**2)/( 2 * (sigma**2) ) )  )
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
-
-
+\medskip
+\bigskip
+ 
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
 outputs = []
@@ -324,8 +308,14 @@ for i in np.linspace(2, 3, num=500):
     outputs.append(gaussian(i, mean_means, mean_stds))
 \end{lstlisting}
 %%% vtnb end %%%
-%%% vtnb start output %%%
-%%% vtnb end output %%%
+\medskip
+\bigskip
+ 
+%%% vtnb start %%%
+\begin{lstlisting}[frame=shadowbox]
 
+\end{lstlisting}
+%%% vtnb end %%%
+\medskip
 %%%%%%%%%%%%%%%%%%%%%%%%  END  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

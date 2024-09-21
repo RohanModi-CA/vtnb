@@ -56,7 +56,7 @@ file_table = {"\\documentclass[12pt]{article}\\input{/home/thinkpad/Documents/Fi
 for _, tuple in ipairs(cell_data) do
 	block_to_add = tuple[2]
 	if tuple[1] == "code" then
-		block_to_add = "\n%%% vtnb start %%%\n\\begin{lstlisting}[frame=shadowbox]\n" .. tuple[2] .. "\n\\end{lstlisting}\n%%% vtnb end %%%\n"
+		block_to_add = "\\bigskip\n \n%%% vtnb start %%%\n\\begin{lstlisting}[frame=shadowbox]\n" .. tuple[2] .. "\n\\end{lstlisting}\n%%% vtnb end %%%\n\\medskip"
 	elseif tuple[1] == "text" then
 		block_to_add = "\n".. tuple[2] .."\n"
 	else

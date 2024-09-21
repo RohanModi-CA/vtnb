@@ -1,1 +1,1 @@
-The mean is 2.424413181754666, and the standard deviation is: 0.03158646374472155.
+The mean is 2.4244731841881433, and the standard deviation is: 0.03139535399842302.
