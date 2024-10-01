@@ -277,6 +277,7 @@ local function add_outputs(input_table) -- this messes with lines.
 			end
 
 			table.insert(table_to_add,  "%%% vtnb end output %%%" )
+			print(line_num)
 			vim.api.nvim_buf_set_lines(bufnr, line_num - 1, line_num, false, table_to_add) 
 			line_num = line_num + (tableLen(table_to_add) - 1) -- account for us moving the table
 
@@ -317,7 +318,6 @@ function M.compile()
 		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
 
 		print()
-		print(lines)
 		add_outputs(lines) -- this messes with lines
 		vim.cmd("write")
 		vim.cmd("VimtexCompileSS")
