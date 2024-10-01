@@ -316,6 +316,8 @@ function M.compile()
 		end
 		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
 
+		print()
+		print(lines)
 		add_outputs(lines) -- this messes with lines
 		vim.cmd("write")
 		vim.cmd("VimtexCompileSS")
