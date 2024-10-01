@@ -280,6 +280,7 @@ local function add_outputs(input_table) -- this messes with lines.
 			print(line_num)
 			vim.api.nvim_buf_set_lines(bufnr, line_num - 1, line_num, false, table_to_add) 
 			line_num = line_num + (tableLen(table_to_add) - 1) -- account for us moving the table
+			print("hi")
 
 		end
 		line_num = line_num + 1
