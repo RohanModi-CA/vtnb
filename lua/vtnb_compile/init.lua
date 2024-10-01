@@ -241,7 +241,7 @@ local function intercept_figures_in_out(file_name)
 	return (figure_table)
 end
 
-local function add_outputs(input_table) -- this messes with lines.
+local function add_outputs(input_table, bufnr) -- this messes with lines.
 	local output_table = {}
 	local inside_vtnb = false
 	local inside_begin_end = false
@@ -280,7 +280,6 @@ local function add_outputs(input_table) -- this messes with lines.
 			print(line_num)
 			vim.api.nvim_buf_set_lines(bufnr, line_num - 1, line_num, false, table_to_add) 
 			line_num = line_num + (tableLen(table_to_add) - 1) -- account for us moving the table
-			print("hi")
 
 		end
 		line_num = line_num + 1
@@ -319,7 +318,7 @@ function M.compile()
 		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
 
 		print()
-		add_outputs(lines) -- this messes with lines
+		add_outputs(lines, bufnr) -- this messes with lines
 		vim.cmd("write")
 		vim.cmd("VimtexCompileSS")
 		vim.cmd("redraw")
