@@ -323,6 +323,6 @@ function M.compile()
 	else
 		print(out[2])
 	end
-
+end
 
 return M
