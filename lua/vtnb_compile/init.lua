@@ -1,11 +1,7 @@
 -- local RunOnAllFileTypes = not (vim.g.VTSRunOnAllFileTypes==nil)
 local M = {}
 
--- Get the current buffer number
-local bufnr = vim.api.nvim_get_current_buf()
 
--- Get all lines of the buffer as a list of strings
-local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
 
 local function readFileIntoTable(filename)
@@ -272,7 +268,7 @@ local function add_outputs(input_table) -- this messes with lines.
 			figure_table = intercept_figures_in_out(file_name)
 
 			if not isFileEmptyOrWhitespace(file_name) then
-				table.insert(table_to_add, "	\\lstinputlisting[frame=tlbr]{" .. file_name .. "}")
+				table.insert(table_to_add, "	\\lstinputlisting[frame=tlbr, style=out]{" .. file_name .. "}")
 			end
 
 			for _, idx in ipairs(figure_table) do
@@ -291,36 +287,42 @@ local function add_outputs(input_table) -- this messes with lines.
 	return output_table
 end
 
+function M.compile()
+	-- Get the current buffer number
+	local bufnr = vim.api.nvim_get_current_buf()
 
-code = extract_text_blocks(lines)
-code = comment_out_show(code)
-writeTableToFile(".buggs.py", code)
-out = run_python_script(".buggs.py")
-if not (type(out[1]) == "boolean") then -- errors return a table: {false, "error_message"}
-	split_and_write_blocks(out, ".vtnb_out")
+	-- Get all lines of the buffer as a list of strings
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	code = extract_text_blocks(lines)
+	code = comment_out_show(code)
+	writeTableToFile(".buggs.py", code)
+	out = run_python_script(".buggs.py")
+	if not (type(out[1]) == "boolean") then -- errors return a table: {false, "error_message"}
+		split_and_write_blocks(out, ".vtnb_out")
 
 
-	-- this stuff messes with lines
-	local indices_to_delete = output_locations(lines)
-	if indices_to_delete then
-		-- Sort the indices in descending order to avoid shifting issues
-		indices_to_delete = reverseTable(indices_to_delete)
+		-- this stuff messes with lines
+		local indices_to_delete = output_locations(lines)
+		if indices_to_delete then
+			-- Sort the indices in descending order to avoid shifting issues
+			indices_to_delete = reverseTable(indices_to_delete)
 
-		local buf = vim.api.nvim_get_current_buf()
+			local buf = vim.api.nvim_get_current_buf()
 
-		for _, idx in ipairs(indices_to_delete) do
-		  -- Lua indices start from 1, so adjust the index to Vim's 0-based indexing
-		  vim.api.nvim_buf_set_lines(buf, idx[1] -1 , idx[2], false, {}) 
+			for _, idx in ipairs(indices_to_delete) do
+			  -- Lua indices start from 1, so adjust the index to Vim's 0-based indexing
+			  vim.api.nvim_buf_set_lines(buf, idx[1] -1 , idx[2], false, {}) 
+			end
 		end
-	end
-	lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
+		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
 
-	add_outputs(lines) -- this messes with lines
-	vim.cmd("write")
-	vim.cmd("VimtexCompileSS")
-	vim.cmd("redraw")
-else
-	print(out[2])
-end
+		add_outputs(lines) -- this messes with lines
+		vim.cmd("write")
+		vim.cmd("VimtexCompileSS")
+		vim.cmd("redraw")
+	else
+		print(out[2])
+	end
+
 
 return M
