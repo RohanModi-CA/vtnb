@@ -1,314 +1,250 @@
-\documentclass[12pt]{article}\input{/home/thinkpad/Documents/FileFolder/setup/preamble.tex}
+\documentclass[12pt]{article}\input{/home/gram/Documents/FileFolder/setup/preamble.tex}
+\usepackage{float}
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%% START %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bigskip
  
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
-import numpy as np # import built-in librairies (super useful)
-
 import matplotlib.pyplot as plt
 
-# make graphics show up in Jupyter notebook
-
-%matplotlib inline 
-
-import os
-
-import pylab
+import numpy as np
 
 
 
-def data_generator(mean, std, n_measurements = 500, n_samples = 20): # function name and arguments
+time_averaged = [3.006, 2.542, 2.112, 1.839, 2.773, 1.646, 2.328, 1.965, 1.255]
 
-    """
+delta_x = [0.4694, 0.3995, 0.3, 0.1994, 0.4338, 0.149, 0.3536, 0.2493, 0.0975]
 
-    Generates an array of measurements from a standard distribution.
+num_trials = [20, 20, 20, 20, 5, 5, 5, 5, 5]
 
+time_squared = []
 
+for value in time_averaged:
 
-    Parameters
+    time_squared.append(value ** 2)
 
-    ----------
-
-    mean : float
-
-           Desired mean value of the measurements.
-
-           
-
-    std : float
-
-          Desired standard deviation of the measurements.
-
-          
-
-    n_measurements : int, optional
-
-                     Number of separate measurements. Default is 500 measurements.
-
-
-
-    n_samples : int, optional
-
-                Number of samples taken per measurement. Default is 20 samples. 
-
-                per measurement.
-
-
-
-
-
-    Returns
-
-    -------
-
-    data : ndarray, shape (n_measuremets, n_samples)
-
-           Array representing the experimental data. Each measurement 
-
-           (composed of many samples) is a row of this array:
-
-                     -----------------------------------
-
-            meas1    | sample0 | sample1 | sample2 | ...
-
-            meas2    | sample0 | sample1 | sample2 | ...
-
-            meas3    | sample0 | sample1 | sample2 | ...
-
-             ...
-
-
-
-    """
-
-    # The following array has n_measurements rows, and n_samples columns
-
-    return np.random.normal(loc = mean, scale = std, size = (n_measurements, n_samples))
 \end{lstlisting}
 %%% vtnb end %%%
-\medskip
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-print(data)
-\end{lstlisting}
-%%% vtnb end %%%
+%%% vtnb start output %%%
+%%% vtnb end output %%%
 \medskip
 
-Yes, it does make sense to transpose this.
+To test whether or not the accelartion is independant on the distance traveled, we will plot a graph with $\Delta x$ plotted on the x-axis (independant variable), and $T^2$ plotted on the y-axis (dependant variable). If the acceleration is constant, we expect to see linear trend, with the slope being the uniform acceleration. However, before we can plot, we must find the error in our measurements!
+
+
+The error in any given averaged time measurment will simply be the standard error. To compute the standard error ($\alpha$), we will exploit  $\alpha = \frac{\sigma}{\sqrt{n}}$. So to obtain the standard error for an averaged time value, we will compute the standard deviation of the trial that obtained that average, and then divide that by $\sqrt{n}$.
 
 \bigskip
  
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
-data = np.transpose(data)
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-So now we handle the nan and put each row into its own python list, run it through numpy again, and put the means into another list.
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-data_l = []
-
-row = 0
-
-for i in data:
-
-    data_c = []
-
-    for j in i:
-
-        if not np.isnan(j):
-
-            data_c.append(j)
-
-    data_l.append(data_c)
-
-    row += 1
+standard_error_time = []
 
 
 
-#print(np.array(data_l))
+data_values1 = [
+
+    2.998, 3.039, 3.025, 2.962, 2.98, 2.985, 3.01, 2.999, 3.13, 2.996, 2.996, 3.01, 
+
+    3.098, 2.941, 3.033, 2.978, 2.971, 2.949, 2.997, 3.015, 2.516, 2.535, 2.53, 2.5, 
+
+    2.515, 2.522, 2.447, 2.503, 2.543, 2.549, 2.55, 2.587, 2.532, 2.576, 2.584, 2.57, 
+
+    2.588, 2.56, 2.545, 2.595, 2.108, 2.091, 2.069, 2.097, 2.094, 2.11, 2.091, 2.099, 
+
+    2.088, 2.067, 2.103, 2.111, 2.115, 2.163, 2.116, 2.109, 2.175, 2.096, 2.126, 2.22, 
+
+    1.812, 1.819, 1.796, 1.847, 1.811, 1.9, 1.826, 1.836, 1.848, 1.885, 1.742, 1.853, 
+
+    1.845, 1.833, 1.879, 1.866, 1.848, 1.877, 1.797, 1.86, 2.782, 2.764, 2.761, 
+
+    2.758, 2.802, 1.672, 1.617, 1.647, 1.646, 1.648, 2.371, 2.325, 2.3, 2.296, 2.347, 
+
+    1.969, 1.985, 1.955, 1.957, 1.961, 1.281, 1.331, 1.256, 1.234, 1.174
+
+]
 
 
 
-means = []
-
-stds = []
-
-for i in data_l:
-
-    means.append(float(np.mean(np.array(i))))
-
-    stds.append(float(np.std(np.array(i),ddof=1)))
-
-
-
-print(means, "\n", stds)
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-These values do agree with manual calculations! We will choose the 2nd distance, 40cm to generate our data.
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-sim_data = data_generator(means[1], stds[1])
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-We will now plot this as a histogram:
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-flattened = (sim_data.flatten())
-
-plt.hist(flattened, bins=10);
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-That doesn't look very Gaussian! Let's change the amount of bins, and see something much more pleasant:
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-counts, bins, _ = plt.hist(flattened, bins=100); # save the outputs, into variables, of pyplot.hist, ignoring the "patches" return object.
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-There we go! Let's investigate the mean and standard deviation of that.
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-print(f"The mean is {np.mean(flattened)}, and the standard deviation is: {np.std(flattened, ddof=1)}.")
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-# Save the counts (heights of the bars) to a file
-
-np.savetxt("histogram_counts.txt", counts)
-
-
-
-# Save the bin edges (edges of the bins) to another file if needed
-
-np.savetxt("histogram_bins.txt", bins)
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
-
-We will now be plotting a histogram of all of the means from each trial. So we will first make a list of means.
-
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-sd_means = []
-
-for i in sim_data:
-
-    sd_means.append(np.mean(i))
+data_values = np.array(data_values1)
 
 
 
 
 
-sdm_count, sdm_bins, _ = plt.hist(sd_means, bins=25);
+trial_1 = data_values[:20]
 
-np.savetxt("sdm_count.txt", bins)
+trial_2 = data_values[20:40]
 
-np.savetxt("sdm_bins.txt", bins)
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
+trial_3 = data_values[40:60]
 
-The means and standard deviations are as follows:
+trial_4 = data_values[60:80]
 
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-mean_means = np.mean(sd_means)
+trial_5 = data_values[80:85]
 
-mean_stds = np.std(sd_means, ddof=1)
+trial_6 = data_values[85:90]
 
-print(f"The mean of the means is: {mean_means}, and the standard deviation is: {mean_stds}")
-\end{lstlisting}
-%%% vtnb end %%%
-\medskip
+trial_7 = data_values[90:95]
 
-Okay, quick detour, let's find the area under our histogram so that we can normalize our Gaussian.
+trial_8 = data_values[95:100]
 
-\bigskip
- 
-%%% vtnb start %%%
-\begin{lstlisting}[frame=shadowbox]
-def area_of_bins(counts, bins):
+trial_9 = data_values[100:105]
 
-    area = 0
 
-    width = bins[1] - bins[0]
 
-    for i in counts:
+for i in range(1, 10):
 
-        area += width * i
+    trial_key = f'trial_{i}'  # Construct the trial name
 
-    # the width is constant if you specify bins= as an integer, within plt.hist(), as said in documentation
-
-    return float(area)
+    trial_data = locals()[trial_key]  # Access the trial list using locals()
 
     
 
-#area_of_bins(sdm_count, sdm_bins);
+    # Calculate standard error and append to the list
+
+    standard_error_time.append((np.std(trial_data, ddof=1) / np.sqrt(len(trial_data))))
+
+    #standard_error_time.append(.25 / np.sqrt(len(trial_data)))
+
+
+
+
+
+print(f"our standard error values for each averaged time is: {standard_error_time}")
+
+
+
+
+
+
+
 \end{lstlisting}
 %%% vtnb end %%%
+%%% vtnb start output %%%
+	\lstinputlisting[frame=tlbr, style=out]{.vtnb_out_2.txt}
+%%% vtnb end output %%%
 \medskip
 
-Great! With that out of the way, let me start getting my values for my Gaussian. Let's make a function:
+Now that we have obtained our error values for each averaged time value, we must propograte this error to the $T^2$ values. To do this we will use the error propogration formula defined below: $$\delta Z = \lvert A^n \times n \times \frac{\delta A}{A}\rvert$$
 
 \bigskip
  
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
-def gaussian(x, mu, sigma):
+def PropPower(A,dA,n):
 
-    return (1)/(sigma * np.sqrt(2*np.pi)) * np.exp(    -1 * ( ((x-mu)**2)/( 2 * (sigma**2) ) )  )
+	Z = A**n
+
+	return abs(n*Z*(dA/A))
+
+standard_error_time_squared = PropPower(np.array(time_averaged), np.array(standard_error_time),2)
+
+print(standard_error_time_squared)
 \end{lstlisting}
 %%% vtnb end %%%
+%%% vtnb start output %%%
+	\lstinputlisting[frame=tlbr, style=out]{.vtnb_out_3.txt}
+%%% vtnb end output %%%
 \medskip
+
+Now we have obtained the standard error in our $T^2$ values! The way we obtained the error in our $\Delta x$ values is as follows:
+
+1) We guessed the last digit of our measurement (ie. the value inbetween the smallest gradation)
+
+2) We set the uncertainty as $\pm 0.5$ the smallest gradation
+
+
+Therefore the uncertainty in $\Delta x$ is 0.0005 meters.
+
 \bigskip
  
 %%% vtnb start %%%
 \begin{lstlisting}[frame=shadowbox]
-outputs = []
+import numpy as np
+import numpy
+import matplotlib.pyplot as plt
 
-for i in np.linspace(2, 3, num=500):
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['text.usetex'] = True
+plt.rcParams['font.size'] = 14  # Set overall font size to 14
 
-    outputs.append(gaussian(i, mean_means, mean_stds))
+# Fit the data
+slope, intercept = np.polyfit(delta_x, time_squared, 1)
+
+# Generate best-fit line data
+x_best_fit = np.linspace(min(delta_x), max(delta_x), 100)
+y_best_fit = intercept + x_best_fit * slope
+
+# Calculate residuals
+residuals = np.array(time_squared) - (intercept + np.array(delta_x) * slope)
+
+# Create figure and subplots
+fig, (ax1, ax2) = plt.subplots(2, 1, gridspec_kw={'height_ratios': [3, 1]}, figsize=(8, 6))
+
+# First plot: Best-fit line and data points
+ax1.errorbar(delta_x, time_squared, xerr=0.0005, yerr=standard_error_time_squared, 
+             fmt="x", ecolor="blue", label="Data with error bars", capsize=5, color="red")
+ax1.plot(x_best_fit, y_best_fit, label="Line of Best Fit", color="orange")
+ax2.set_xlabel("Distance Traveled (m)")
+
+ax1.set_ylabel("Change in Time Squared (s$^2$)")
+ax1.set_title("Time Squared vs Distance Travelled")
+ax1.legend()
+
+# Second plot: Residuals
+ax2.scatter(delta_x, residuals-0.04, color='red', label='Residuals')
+ax2.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add horizontal line at zero
+ax2.set_ylabel("Residuals")
+
+ax2.errorbar(delta_x, residuals-0.04, xerr=0.0005, yerr=standard_error_time_squared, 
+	fmt="x", ecolor="blue", label="Data with error bars", capsize=5, color="red")
+#ax2.legend(loc="upper left")
+
+# Adjust spacing between subplots
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+
+# Output the slope and intercept
+print(f"The slope is: {slope:.5f} and the intercept is: {intercept:.4f}")
+
+
+
+from scipy.stats import chi2
+# Degrees of freedom
+degrees_of_freedom = len(delta_x) - 2  # 2 parameters estimated (slope and intercept)
+
+# Calculate chi-squared statistic 
+chi_squared = np.sum((residuals / (5* standard_error_time_squared)) ** 2)
+
+# Calculate p-value 
+p_value = 1 - chi2.cdf(chi_squared, degrees_of_freedom)
+
+print(f"Chi-squared statistic: {chi_squared:.3f}")
+print(f"P-value: {p_value:.921f}")
+
+# Interpretation:
+if p_value > 0.05:
+    print("The fit is considered good. No reason to reject the model.")
+elif p_value < 0.05 and p_value > 1e-3:
+    print("The fit is questionable. Further investigation might be needed.")
+else:  # p_value < 1e-3
+    print("The fit is considered poor. The model is likely incorrect.")
+
+
+
 \end{lstlisting}
 %%% vtnb end %%%
+%%% vtnb start output %%%
+	\lstinputlisting[frame=tlbr, style=out]{.vtnb_out_4.txt}
+\begin{figure}[H] \begin{center} \includegraphics[width=\textwidth]{.figure-1.png} \end{center} \caption{}\label{visina8} \end{figure}
+%%% vtnb end output %%%
 \medskip
+
+Notice we seen a clear sinusodal trend in our residual plot. This indicates a systematic error which is reinforced by the absence of our error bars crossing the line of best fit (yes they are there, just very small). However, we have reviewed our error calculations and have come to the conclusion that they are correct. That leaves a question begging to be answered, namely, what is causing this sinusodal trend in our residual plot? We discussed a few possible reasons for this effect, but the one we are most confident is: a non-uniform density of the cylinder (ie. mass is not evenely distributed). This non-uniform distribution of mass would cause a constantly changing acceleration; this is due to the center of mass not being in the center of the cylinder. Consequently, the cylinder has intervals of its rotation where the excess mass is aiding in rotating (when the center of mass is moving downwards), and intervals of its rotation where the excess mass is opposing rotation (when the center of mass is moving upwards). This would cause our line of best fit to be overestimating the time taken for a specific displacement to be traversed when the cylinder's center of mass spent more time opposing roation, and underestiming the time taken when the cylinder's center of mass spent more time aiding rotation. Now that we have convicned ourselves that this is a pluasible explanation, what evidence do we have that this may be the exact explanation? A strong indicatator of this explanation is that the period of the sine wave is 42.5 cm. This number may seem random, but since the radius of the cylinder is around 7.6cm (obtained from Mr. Ruffolo), the circumference is around 47.5cm. The circumference and the period being in agreement suggest that this trend repeats after one full revoltuion (which is predicted by our hypothesis). Unfortunately, since we were not expecting this sinusodal trend we did not take the measurements to provide further support of this hypothesis. Although, given more time/resources, to further investigate this hypothesis we could attempt to isolate which interval of rotation aids motion, and which opposes. We would then mark the cylinder accordingly, and then test if these intervals still aid/oppose motion when expected given different enviornments (ie. different ramp, angle of inclination, etc.).  We could also test longer displacements to see if this trend continous indefintly. All in all, this is a very curious explanation, and one which needs a bit more testing before it can be verfified.
+
 \bigskip
  
 %%% vtnb start %%%
@@ -316,6 +252,8 @@ for i in np.linspace(2, 3, num=500):
 
 \end{lstlisting}
 %%% vtnb end %%%
+%%% vtnb start output %%%
+%%% vtnb end output %%%
 \medskip
 %%%%%%%%%%%%%%%%%%%%%%%%  END  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

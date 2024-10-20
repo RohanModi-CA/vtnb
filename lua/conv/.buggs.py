@@ -1,192 +1,187 @@
-import numpy as np # import built-in librairies (super useful)
-
 import matplotlib.pyplot as plt
 
-# make graphics show up in Jupyter notebook
-
-import os
-
-import pylab
+import numpy as np
 
 
 
-def data_generator(mean, std, n_measurements = 500, n_samples = 20): # function name and arguments
+time_averaged = [3.006, 2.542, 2.112, 1.839, 2.773, 1.646, 2.328, 1.965, 1.255]
 
-    """
+delta_x = [0.4694, 0.3995, 0.3, 0.1994, 0.4338, 0.149, 0.3536, 0.2493, 0.0975]
 
-    Generates an array of measurements from a standard distribution.
+num_trials = [20, 20, 20, 20, 5, 5, 5, 5, 5]
 
+time_squared = []
 
+for value in time_averaged:
 
-    Parameters
+    time_squared.append(value ** 2)
 
-    ----------
-
-    mean : float
-
-           Desired mean value of the measurements.
-
-           
-
-    std : float
-
-          Desired standard deviation of the measurements.
-
-          
-
-    n_measurements : int, optional
-
-                     Number of separate measurements. Default is 500 measurements.
-
-
-
-    n_samples : int, optional
-
-                Number of samples taken per measurement. Default is 20 samples. 
-
-                per measurement.
-
-
-
-
-
-    Returns
-
-    -------
-
-    data : ndarray, shape (n_measuremets, n_samples)
-
-           Array representing the experimental data. Each measurement 
-
-           (composed of many samples) is a row of this array:
-
-                     -----------------------------------
-
-            meas1    | sample0 | sample1 | sample2 | ...
-
-            meas2    | sample0 | sample1 | sample2 | ...
-
-            meas3    | sample0 | sample1 | sample2 | ...
-
-             ...
-
-
-
-    """
-
-    # The following array has n_measurements rows, and n_samples columns
-
-    return np.random.normal(loc = mean, scale = std, size = (n_measurements, n_samples))
 print('VTNB END OF CODEBLOCK 1')
-data = np.genfromtxt("/home/thinkpad/Téléchargements/buggsa.csv", delimiter=",", invalid_raise=False)
-print('VTNB END OF CODEBLOCK 2')
-data = np.transpose(data)
-print('VTNB END OF CODEBLOCK 3')
-data_l = []
-
-row = 0
-
-for i in data:
-
-    data_c = []
-
-    for j in i:
-
-        if not np.isnan(j):
-
-            data_c.append(j)
-
-    data_l.append(data_c)
-
-    row += 1
+standard_error_time = []
 
 
 
-#print(np.array(data_l))
+data_values1 = [
+
+    2.998, 3.039, 3.025, 2.962, 2.98, 2.985, 3.01, 2.999, 3.13, 2.996, 2.996, 3.01, 
+
+    3.098, 2.941, 3.033, 2.978, 2.971, 2.949, 2.997, 3.015, 2.516, 2.535, 2.53, 2.5, 
+
+    2.515, 2.522, 2.447, 2.503, 2.543, 2.549, 2.55, 2.587, 2.532, 2.576, 2.584, 2.57, 
+
+    2.588, 2.56, 2.545, 2.595, 2.108, 2.091, 2.069, 2.097, 2.094, 2.11, 2.091, 2.099, 
+
+    2.088, 2.067, 2.103, 2.111, 2.115, 2.163, 2.116, 2.109, 2.175, 2.096, 2.126, 2.22, 
+
+    1.812, 1.819, 1.796, 1.847, 1.811, 1.9, 1.826, 1.836, 1.848, 1.885, 1.742, 1.853, 
+
+    1.845, 1.833, 1.879, 1.866, 1.848, 1.877, 1.797, 1.86, 2.782, 2.764, 2.761, 
+
+    2.758, 2.802, 1.672, 1.617, 1.647, 1.646, 1.648, 2.371, 2.325, 2.3, 2.296, 2.347, 
+
+    1.969, 1.985, 1.955, 1.957, 1.961, 1.281, 1.331, 1.256, 1.234, 1.174
+
+]
 
 
 
-means = []
-
-stds = []
-
-for i in data_l:
-
-    means.append(float(np.mean(np.array(i))))
-
-    stds.append(float(np.std(np.array(i),ddof=1)))
-
-
-
-print(means, "\n", stds)
-print('VTNB END OF CODEBLOCK 4')
-sim_data = data_generator(means[1], stds[1])
-print('VTNB END OF CODEBLOCK 5')
-flattened = (sim_data.flatten())
-
-plt.hist(flattened, bins=10);
-print('VTNB END OF CODEBLOCK 6')
-counts, bins, _ = plt.hist(flattened, bins=100); # save the outputs, into variables, of pyplot.hist, ignoring the "patches" return object.
-print('VTNB END OF CODEBLOCK 7')
-print(f"The mean is {np.mean(flattened)}, and the standard deviation is: {np.std(flattened, ddof=1)}.")
-print('VTNB END OF CODEBLOCK 8')
-# Save the counts (heights of the bars) to a file
-
-np.savetxt("histogram_counts.txt", counts)
-
-
-
-# Save the bin edges (edges of the bins) to another file if needed
-
-np.savetxt("histogram_bins.txt", bins)
-print('VTNB END OF CODEBLOCK 9')
-sd_means = []
-
-for i in sim_data:
-
-    sd_means.append(np.mean(i))
+data_values = np.array(data_values1)
 
 
 
 
 
-sdm_count, sdm_bins, _ = plt.hist(sd_means, bins=25);
+trial_1 = data_values[:20]
 
-np.savetxt("sdm_count.txt", bins)
+trial_2 = data_values[20:40]
 
-np.savetxt("sdm_bins.txt", bins)
-print('VTNB END OF CODEBLOCK 10')
-mean_means = np.mean(sd_means)
+trial_3 = data_values[40:60]
 
-mean_stds = np.std(sd_means, ddof=1)
+trial_4 = data_values[60:80]
 
-print(f"The mean of the means is: {mean_means}, and the standard deviation is: {mean_stds}")
-print('VTNB END OF CODEBLOCK 11')
-def area_of_bins(counts, bins):
+trial_5 = data_values[80:85]
 
-    area = 0
+trial_6 = data_values[85:90]
 
-    width = bins[1] - bins[0]
+trial_7 = data_values[90:95]
 
-    for i in counts:
+trial_8 = data_values[95:100]
 
-        area += width * i
+trial_9 = data_values[100:105]
 
-    # the width is constant if you specify bins= as an integer, within plt.hist(), as said in documentation
 
-    return float(area)
+
+for i in range(1, 10):
+
+    trial_key = f'trial_{i}'  # Construct the trial name
+
+    trial_data = locals()[trial_key]  # Access the trial list using locals()
 
     
 
-#area_of_bins(sdm_count, sdm_bins);
-print('VTNB END OF CODEBLOCK 12')
-def gaussian(x, mu, sigma):
+    # Calculate standard error and append to the list
 
-    return (1)/(sigma * np.sqrt(2*np.pi)) * np.exp(    -1 * ( ((x-mu)**2)/( 2 * (sigma**2) ) )  )
-print('VTNB END OF CODEBLOCK 13')
-outputs = []
+    standard_error_time.append((np.std(trial_data, ddof=1) / np.sqrt(len(trial_data))))
 
-for i in np.linspace(2, 3, num=500):
+    #standard_error_time.append(.25 / np.sqrt(len(trial_data)))
 
-    outputs.append(gaussian(i, mean_means, mean_stds))
-print('VTNB END OF CODEBLOCK 14')
+
+
+
+
+print(f"our standard error values for each averaged time is: {standard_error_time}")
+
+
+
+
+
+
+
+print('VTNB END OF CODEBLOCK 2')
+def PropPower(A,dA,n):
+
+	Z = A**n
+
+	return abs(n*Z*(dA/A))
+
+standard_error_time_squared = PropPower(np.array(time_averaged), np.array(standard_error_time),2)
+
+print(standard_error_time_squared)
+print('VTNB END OF CODEBLOCK 3')
+import numpy as np
+import numpy
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['text.usetex'] = True
+plt.rcParams['font.size'] = 14  # Set overall font size to 14
+
+# Fit the data
+slope, intercept = np.polyfit(delta_x, time_squared, 1)
+
+# Generate best-fit line data
+x_best_fit = np.linspace(min(delta_x), max(delta_x), 100)
+y_best_fit = intercept + x_best_fit * slope
+
+# Calculate residuals
+residuals = np.array(time_squared) - (intercept + np.array(delta_x) * slope)
+
+# Create figure and subplots
+fig, (ax1, ax2) = plt.subplots(2, 1, gridspec_kw={'height_ratios': [3, 1]}, figsize=(8, 6))
+
+# First plot: Best-fit line and data points
+ax1.errorbar(delta_x, time_squared, xerr=0.0005, yerr=standard_error_time_squared, 
+             fmt="x", ecolor="blue", label="Data with error bars", capsize=5, color="red")
+ax1.plot(x_best_fit, y_best_fit, label="Line of Best Fit", color="orange")
+ax2.set_xlabel("Distance Traveled (m)")
+
+ax1.set_ylabel("Change in Time Squared (s$^2$)")
+ax1.set_title("Time Squared vs Distance Travelled")
+ax1.legend()
+
+# Second plot: Residuals
+ax2.scatter(delta_x, residuals-0.04, color='red', label='Residuals')
+ax2.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add horizontal line at zero
+ax2.set_ylabel("Residuals")
+
+ax2.errorbar(delta_x, residuals-0.04, xerr=0.0005, yerr=standard_error_time_squared, 
+	fmt="x", ecolor="blue", label="Data with error bars", capsize=5, color="red")
+#ax2.legend(loc="upper left")
+
+# Adjust spacing between subplots
+plt.tight_layout()
+
+# Show the plot
+plt.savefig('.figure-1.png'); print('VTNB FIGURE-1') # plt.show()
+
+# Output the slope and intercept
+print(f"The slope is: {slope:.5f} and the intercept is: {intercept:.4f}")
+
+
+
+from scipy.stats import chi2
+# Degrees of freedom
+degrees_of_freedom = len(delta_x) - 2  # 2 parameters estimated (slope and intercept)
+
+# Calculate chi-squared statistic 
+chi_squared = np.sum((residuals / (5* standard_error_time_squared)) ** 2)
+
+# Calculate p-value 
+p_value = 1 - chi2.cdf(chi_squared, degrees_of_freedom)
+
+print(f"Chi-squared statistic: {chi_squared:.3f}")
+print(f"P-value: {p_value:.921f}")
+
+# Interpretation:
+if p_value > 0.05:
+    print("The fit is considered good. No reason to reject the model.")
+elif p_value < 0.05 and p_value > 1e-3:
+    print("The fit is questionable. Further investigation might be needed.")
+else:  # p_value < 1e-3
+    print("The fit is considered poor. The model is likely incorrect.")
+
+
+
+print('VTNB END OF CODEBLOCK 4')
+
+print('VTNB END OF CODEBLOCK 5')
