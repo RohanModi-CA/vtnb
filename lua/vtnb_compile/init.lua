@@ -268,6 +268,7 @@ local function add_outputs(input_table, bufnr) -- this messes with lines.
 			figure_table = intercept_figures_in_out(file_name)
 
 			if not isFileEmptyOrWhitespace(file_name) then
+				table.insert(table_to_add, "	\\vspace{-1cm}")
 				table.insert(table_to_add, "	\\inputminted[bgcolor=lightergrey]{python}{" .. file_name .. "}")
 			end
 
