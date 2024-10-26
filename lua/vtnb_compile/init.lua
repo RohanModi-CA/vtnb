@@ -302,8 +302,6 @@ function M.compile()
 	if not (type(out[1]) == "boolean") then -- errors return a table: {false, "error_message"}
 		split_and_write_blocks(out, ".vtnb_out")
 
-		vim.cmd("vtnb success")
-
 		-- this stuff messes with lines
 		local indices_to_delete = output_locations(lines)
 		if indices_to_delete then
@@ -324,6 +322,9 @@ function M.compile()
 		vim.cmd("write")
 		vim.cmd("VimtexCompileSS")
 		vim.cmd("redraw")
+		vim.cmd("echo 'vtnb success'")
+
+
 	else
 		print(out[2])
 	end
