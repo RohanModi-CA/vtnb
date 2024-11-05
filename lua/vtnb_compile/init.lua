@@ -269,7 +269,7 @@ local function add_outputs(input_table, bufnr,cleaned_path) -- this messes with 
 
 			if not isFileEmptyOrWhitespace(file_name) then
 				table.insert(table_to_add, "	\\vspace{-1cm}")
-				table.insert(table_to_add, "	\\inputminted[bgcolor=lightergrey]{python}{" .. file_name .. "}")
+				table.insert(table_to_add, "	\\inputminted[bgcolor=lightergrey]{text}{" .. file_name .. "}")
 			end
 
 			for _, idx in ipairs(figure_table) do
