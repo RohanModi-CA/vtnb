@@ -241,7 +241,7 @@ local function intercept_figures_in_out(file_name)
 	return (figure_table)
 end
 
-local function add_outputs(input_table, bufnr) -- this messes with lines.
+local function add_outputs(input_table, bufnr,cleaned_path) -- this messes with lines.
 	local output_table = {}
 	local inside_vtnb = false
 	local inside_begin_end = false
@@ -259,7 +259,7 @@ local function add_outputs(input_table, bufnr) -- this messes with lines.
 			end
 			
 			inside_vtnb = false
-			file_name = ".vtnb_out_" .. code_count .. ".txt"
+			file_name = cleaned_path..".vtnb_out_" .. code_count .. ".txt"
 			table_to_add = {"%%% vtnb end %%%", "%%% vtnb start output %%%"}
 
 
@@ -290,6 +290,12 @@ local function add_outputs(input_table, bufnr) -- this messes with lines.
 end
 
 function M.compile()
+	-- Get current filename to avoid conflicts
+	local file_name_1 = vim.fn.expand('%:p')
+	-- Remove stuff to avoid conflicts (used just for uniqueness so who cares)
+	local cleaned_path = file_name_1:gsub("[/.]", "")
+
+	
 	-- Get the current buffer number
 	local bufnr = vim.api.nvim_get_current_buf()
 
@@ -297,10 +303,10 @@ function M.compile()
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	code = extract_text_blocks(lines)
 	code = comment_out_show(code)
-	writeTableToFile(".buggs.py", code)
-	out = run_python_script(".buggs.py")
+	writeTableToFile(cleaned_path..".buggs.py", code)
+	out = run_python_script(cleaned_path..".buggs.py")
 	if not (type(out[1]) == "boolean") then -- errors return a table: {false, "error_message"}
-		split_and_write_blocks(out, ".vtnb_out")
+		split_and_write_blocks(out, cleaned_path..".vtnb_out")
 
 		-- this stuff messes with lines
 		local indices_to_delete = output_locations(lines)
@@ -318,7 +324,7 @@ function M.compile()
 		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false) -- we reread our lines since we've messed with them
 
 		print()
-		add_outputs(lines, bufnr) -- this messes with lines
+		add_outputs(lines, bufnr,cleaned_path) -- this messes with lines
 		vim.cmd("write")
 		vim.cmd("VimtexCompileSS")
 		vim.cmd("redraw")
