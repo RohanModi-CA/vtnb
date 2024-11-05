@@ -273,7 +273,7 @@ local function add_outputs(input_table, bufnr,cleaned_path) -- this messes with 
 			end
 
 			for _, idx in ipairs(figure_table) do
-				figure_code = "\\begin{figure}[H] \\begin{center} \\includegraphics[width=\\textwidth]{"..cleaned_path"..".figure-".. idx .. ".png} \\end{center} \\caption{} \\end{figure}"
+				figure_code = "\\begin{figure}[H] \\begin{center} \\includegraphics[width=\\textwidth]{"..cleaned_path..".figure-".. idx .. ".png} \\end{center} \\caption{} \\end{figure}"
 				table.insert(table_to_add, figure_code)
 			end
 
