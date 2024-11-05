@@ -106,7 +106,7 @@ function reverseTable(t)
 end
 
 
-local function comment_out_show(python_code_table)
+local function comment_out_show(python_code_table,cleaned_file)
 	local plt_alias = nil
 	local figure_count = 0
 
@@ -124,7 +124,7 @@ local function comment_out_show(python_code_table)
 		local show_call = plt_alias and string.format("%s.show()", plt_alias) or "matplotlib.pyplot.show()"
 		if string.find(line, show_call) then
 			figure_count = figure_count + 1
-			filename = ".figure-" .. figure_count
+			filename = cleaned_file..".figure-" .. figure_count
 			save_command = plt_alias .. ".savefig('" .. filename .. ".png'); print('VTNB FIGURE-" .. figure_count .. "') "
 			python_code_table[i] = save_command .. "# " .. line -- Comment out the line
 		end
@@ -273,7 +273,7 @@ local function add_outputs(input_table, bufnr,cleaned_path) -- this messes with 
 			end
 
 			for _, idx in ipairs(figure_table) do
-				figure_code = "\\begin{figure}[H] \\begin{center} \\includegraphics[width=\\textwidth]{.figure-".. idx .. ".png} \\end{center} \\caption{} \\end{figure}"
+				figure_code = "\\begin{figure}[H] \\begin{center} \\includegraphics[width=\\textwidth]{"..cleaned_path"..".figure-".. idx .. ".png} \\end{center} \\caption{} \\end{figure}"
 				table.insert(table_to_add, figure_code)
 			end
 
@@ -302,7 +302,7 @@ function M.compile()
 	-- Get all lines of the buffer as a list of strings
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	code = extract_text_blocks(lines)
-	code = comment_out_show(code)
+	code = comment_out_show(code,cleaned_path)
 	writeTableToFile(cleaned_path..".buggs.py", code)
 	out = run_python_script(cleaned_path..".buggs.py")
 	if not (type(out[1]) == "boolean") then -- errors return a table: {false, "error_message"}
