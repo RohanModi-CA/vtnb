@@ -293,7 +293,7 @@ function M.compile()
 	-- Get current filename to avoid conflicts
 	local file_name_1 = vim.fn.expand('%:p')
 	-- Remove stuff to avoid conflicts (used just for uniqueness so who cares)
-	local cleaned_path = file_name_1:gsub("[/.]", "")
+	local cleaned_path = "."..file_name_1:gsub("[/.]", "")
 
 	
 	-- Get the current buffer number
