@@ -107,28 +107,23 @@ end
 
 
 local function comment_out_show(python_code_table,cleaned_file)
-	local plt_alias = nil
-	local figure_count = 0
+    local plt_alias = nil
+    local figure_count = 0
 
-	-- Find the alias for matplotlib.pyplot (if any)
-	for _, line in ipairs(python_code_table) do
-		local match = string.match(line, "^import%s+matplotlib.pyplot%s+as%s+(%w+)$")
-		if match then
-			plt_alias = match
-			break
-		end
-	end
+    -- Improved regex for finding matplotlib.pyplot alias
+    local import_pattern = "import%s+matplotlib%.pyplot%s+as%s+(%w+)"
+    local from_import_pattern = "from%s+matplotlib%s+import%s+pyplot%s+as%s+(%w+)"
 
-	-- Comment out lines with plt.show() or its alias
-	for i, line in ipairs(python_code_table) do
-		local show_call = plt_alias and string.format("%s.show()", plt_alias) or "matplotlib.pyplot.show()"
-		if string.find(line, show_call) then
-			figure_count = figure_count + 1
-			filename = cleaned_file..".figure-" .. figure_count
-			save_command = plt_alias .. ".savefig('" .. filename .. ".png'); print('VTNB FIGURE-" .. figure_count .. "') "
-			python_code_table[i] = save_command .. "# " .. line -- Comment out the line
-		end
-	end
+    -- Find the alias for matplotlib.pyplot (if any)
+    for _, line in ipairs(python_code_table) do
+        local match = string.match(line, import_pattern) or string.match(line, from_import_pattern) --Handles both variations.
+
+        if match then
+            plt_alias = match
+            print(match)
+            break
+        end
+    end
 
 	return python_code_table
 end
